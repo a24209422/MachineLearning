@@ -1,0 +1,9 @@
+id,name,watt,efficiency,price
+PSU1,450W 80+ 銅牌,450,80+ Bronze,1200
+PSU2,550W 80+ 銅牌,550,80+ Bronze,1500
+PSU3,650W 80+ 銅牌,650,80+ Bronze,1900
+PSU4,650W 80+ 金牌,650,80+ Gold,2600
+PSU5,750W 80+ 金牌,750,80+ Gold,3200
+PSU6,850W 80+ 金牌,850,80+ Gold,4100
+PSU7,1000W 80+ 金牌,1000,80+ Gold,5500
+PSU8,1200W 80+ 白金,1200,80+ Platinum,8500

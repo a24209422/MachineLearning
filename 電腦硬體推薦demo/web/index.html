@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-Hant" data-theme="gear">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>電腦硬體 CP 值配置推薦</title>
+<link rel="icon" href="data:,">
+<script>
+  // 在畫面出現前套用上次選的配色，避免先閃一下預設色
+  try { var t = localStorage.getItem('hw-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+<div class="stripe" aria-hidden="true"></div>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="kicker">BREACH // 零件矩陣</div>
+    <h1>電腦硬體 CP 值配置推薦</h1>
+  </div>
+  <div class="topbar__side">
+    <div id="budget-meter" class="budget-meter"></div>
+    <div class="topbar__tools">
+      <span id="snapshot" class="muted"></span>
+      <label class="theme-picker">介面配色
+        <select id="theme"></select>
+      </label>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="功能">
+  <button type="button" role="tab" id="tab-recommend" data-view="recommend" aria-controls="view-recommend" aria-selected="true">推薦配置</button>
+  <button type="button" role="tab" id="tab-check" data-view="check" aria-controls="view-check" aria-selected="false" tabindex="-1">估價單健檢</button>
+</nav>
+
+<div id="view-recommend" class="view" role="tabpanel" aria-labelledby="tab-recommend">
+<section class="panel input-panel" aria-labelledby="nl-label">
+  <form id="nl-form" class="nl-form">
+    <div class="panel__head">
+      <label id="nl-label" for="nl-text" class="panel__title">輸入需求 · 用一句話描述</label>
+      <span id="llm"></span>
+    </div>
+    <div class="nl-row">
+      <textarea id="nl-text" rows="2" maxlength="500" placeholder="例如：預算三萬五左右，主要玩 3A 遊戲，CPU 想用 AMD（Ctrl + Enter 送出）"></textarea>
+      <button type="submit" id="nl-submit" class="btn btn--primary">解析並套用</button>
+    </div>
+  </form>
+  <div id="nl-status" class="nl-status" aria-live="polite"></div>
+  <div class="controls">
+    <div class="control">
+      <label for="budget">預算（含機殼與散熱器）</label>
+      <input id="budget" type="number" min="0" step="500" inputmode="numeric">
+    </div>
+    <div class="control" role="group" aria-labelledby="usage-label">
+      <span id="usage-label">主要用途</span>
+      <div id="usage" class="seg"></div>
+    </div>
+    <div class="control">
+      <span id="dgpu-label">獨立顯卡</span>
+      <button type="button" id="dgpu" class="btn btn--toggle" aria-pressed="true" aria-describedby="dgpu-label">必須配獨顯</button>
+    </div>
+    <div class="control" role="group" aria-labelledby="brand-label">
+      <span id="brand-label">CPU 品牌</span>
+      <div id="brand" class="seg"></div>
+    </div>
+  </div>
+  <p id="weights" class="hint"></p>
+</section>
+
+<div id="notice"></div>
+
+<main id="result" class="result">
+  <section id="metrics" class="metrics" aria-label="結果摘要"></section>
+
+  <section class="panel panel--hero" aria-labelledby="matrix-title">
+    <div class="panel__head">
+      <h2 id="matrix-title" class="panel__title">零件矩陣 · 每列依價格由低到高</h2>
+      <div class="legend">
+        <span><i class="legend__final"></i>最終選擇</span>
+        <span><i class="legend__base"></i>CP 值起點</span>
+        <span><s>型號</s>被條件排除</span>
+      </div>
+    </div>
+    <div class="scroll"><table id="matrix" class="matrix" aria-label="零件矩陣"></table></div>
+    <p id="matrix-note" class="hint"></p>
+    <h3 class="subhead">已選零件</h3>
+    <div id="picks" class="picks"></div>
+    <p class="hint">稀有度依同類效能分換算（同類最強 = 100）：<span class="tier tier--legendary">傳說 90+</span> <span class="tier tier--epic">史詩 75+</span> <span class="tier tier--rare">稀有 55+</span> <span class="tier tier--uncommon">罕見 40+</span>，主機板、電源、機殼不計分。</p>
+  </section>
+
+  <div class="grid3">
+    <section class="panel" aria-labelledby="buffer-title">
+      <h2 id="buffer-title" class="panel__title">緩衝區 · 升級序列</h2>
+      <div id="buffer"></div>
+    </section>
+    <section class="panel" aria-labelledby="checks-title">
+      <h2 id="checks-title" class="panel__title">守護程序 · 相容性</h2>
+      <div id="checks"></div>
+    </section>
+    <section class="panel" aria-labelledby="explain-title">
+      <h2 id="explain-title" class="panel__title">結果解說</h2>
+      <div id="explain" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="panel" aria-labelledby="compare-title">
+      <h2 id="compare-title" class="panel__title">對照 · 不管划不划算，只求分數最高</h2>
+      <div id="compare"></div>
+    </section>
+    <section class="panel" aria-labelledby="shop-title">
+      <h2 id="shop-title" class="panel__title">商店 · 再加錢可以升</h2>
+      <div id="shop"></div>
+    </section>
+  </div>
+</main>
+
+<footer id="footer" class="footer"></footer>
+</div>
+
+<div id="view-check" class="view" role="tabpanel" aria-labelledby="tab-check" hidden>
+<section class="panel input-panel" aria-labelledby="quote-label">
+  <form id="quote-form">
+    <div class="panel__head">
+      <label id="quote-label" for="quote-text" class="panel__title">估價單健檢 · 貼上一份現成的菜單</label>
+      <span id="quote-llm"></span>
+    </div>
+    <p class="hint quote-intro">ChatGPT、店家估價單、論壇開的菜單都可以，整段貼上即可。系統會把每個零件對到資料庫，檢查加總、相容性與效能分，再用同一份價目表找同價位更好的組合。</p>
+    <textarea id="quote-text" class="quote-text" rows="9" maxlength="4000" placeholder="例如：&#10;CPU：AMD Ryzen 5 7500F　NT$5,500&#10;主機板：B650M-A　NT$4,200&#10;顯示卡：RTX 4060 Ti　NT$11,900&#10;……&#10;總計：NT$27,000（Ctrl + Enter 送出）"></textarea>
+    <div class="controls">
+      <div class="control" role="group" aria-labelledby="quote-usage-label">
+        <span id="quote-usage-label">主要用途（決定效能分的權重）</span>
+        <div id="quote-usage" class="seg"></div>
+      </div>
+      <div class="quote-actions">
+        <button type="button" id="quote-sample" class="btn">載入範例菜單</button>
+        <button type="submit" id="quote-submit" class="btn btn--primary">開始健檢</button>
+      </div>
+    </div>
+  </form>
+  <div id="quote-status" class="nl-status" aria-live="polite"></div>
+</section>
+
+<main id="check-result" class="result" hidden>
+  <section id="check-verdict" class="panel verdict" aria-live="polite"></section>
+  <section id="check-metrics" class="metrics" aria-label="健檢摘要"></section>
+
+  <div class="grid2">
+    <section class="panel" aria-labelledby="items-title">
+      <h2 id="items-title" class="panel__title">逐項對照 · 菜單 vs 資料庫</h2>
+      <div id="check-items"></div>
+    </section>
+    <div class="stack">
+      <section class="panel" aria-labelledby="findings-title">
+        <h2 id="findings-title" class="panel__title">發現的問題</h2>
+        <div id="check-findings"></div>
+      </section>
+      <section class="panel" aria-labelledby="check-checks-title">
+        <h2 id="check-checks-title" class="panel__title">守護程序 · 相容性</h2>
+        <div id="check-checks"></div>
+      </section>
+    </div>
+  </div>
+
+  <section id="check-fix" class="panel" aria-labelledby="fix-title" hidden></section>
+
+  <div class="grid-even">
+    <section id="alt-price" class="panel" aria-labelledby="alt-price-title"></section>
+    <section id="alt-score" class="panel" aria-labelledby="alt-score-title"></section>
+  </div>
+  <p id="check-note" class="hint"></p>
+</main>
+</div>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

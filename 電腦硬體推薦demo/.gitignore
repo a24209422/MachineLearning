@@ -1,0 +1,7 @@
+# 內含 Claude API key，不能提交
+.env
+
+# 前端相依套件（npm install 會重新產生）；建置結果 web/dist 要保留，執行時不需要 Node
+web/node_modules/
+
+__pycache__/

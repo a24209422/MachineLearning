@@ -1,0 +1,35 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "hw-demo",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "uvicorn", "server.main:app", "--port", "8501"],
+      "port": 8501
+    },
+    {
+      "name": "hw-demo-8502",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "uvicorn", "server.main:app", "--port", "8502"],
+      "port": 8502
+    },
+    {
+      "name": "hw-demo-8503",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "uvicorn", "server.main:app", "--port", "8503"],
+      "port": 8503
+    },
+    {
+      "name": "hw-api-dev",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "uvicorn", "server.main:app", "--port", "8000", "--reload"],
+      "port": 8000
+    },
+    {
+      "name": "hw-web-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "web", "run", "dev"],
+      "port": 5173
+    }
+  ]
+}

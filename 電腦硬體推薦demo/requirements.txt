@@ -1,0 +1,4 @@
+fastapi>=0.110
+uvicorn>=0.29
+pandas>=2.0
+anthropic>=1.11; python_version >= "3.10"
